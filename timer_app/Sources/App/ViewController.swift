@@ -32,7 +32,7 @@ class ViewController: UIViewController {
     private lazy var timeLabel: UILabel = {
         let time = UILabel()
         time.textColor = UIColor(hexString: "#c2697c")
-        time.text = "00:0"
+        time.text = "00:\(counterForWork)"
         time.textAlignment = .center
         time.font = UIFont.boldSystemFont(ofSize: 55)
         time.translatesAutoresizingMaskIntoConstraints = false
@@ -92,10 +92,6 @@ class ViewController: UIViewController {
 
     // MARK: - Actions
 
-    @objc func playPauseButtonPressed() {
-
-    }
-
     func runTimer() {
         timer = Timer.scheduledTimer(timeInterval: 0.97,
                                      target: self,
@@ -104,8 +100,53 @@ class ViewController: UIViewController {
                                      repeats: true)
     }
 
-    @objc func runningTimer() {
+    private func startTimer() {
+        isTimerRunning = true
+        isAnimationStarted = true
+        playOrPauseButton.setImage(UIImage(named: "pause"), for: .normal)
+        runTimer()
+    }
 
+    private func stopTimer() {
+        isTimerRunning = false
+        timer?.invalidate()
+        playOrPauseButton.setImage(UIImage(named: "play"), for: .normal)
+    }
+
+    @objc func playPauseButtonPressed() {
+        if isTimerRunning {
+            stopTimer()
+        } else {
+            startTimer()
+        }
+    }
+
+    @objc func runningTimer() {
+        if isWorkTime {
+            if counterForWork > 0 {
+                counterForWork -= 1
+                guard counterForWork >= 10 else { return timeLabel.text = "00:0\(counterForWork)" }
+                timeLabel.text = "00:\(counterForWork)"
+            } else if counterForWork == 0 {
+                isWorkTime = false
+                counterForRest = 10
+                timeLabel.text = "00:\(counterForRest)"
+                timeLabel.textColor = UIColor(hexString: "#429e5c")
+                playOrPauseButton.tintColor = UIColor(hexString: "#429e5c")
+            }
+        } else if !isWorkTime {
+            if counterForRest > 0 {
+                counterForRest -= 1
+                guard counterForRest >= 10 else { return timeLabel.text = "00:0\(counterForRest)" }
+                timeLabel.text = "00:\(counterForRest)"
+            } else if counterForRest == 0 {
+                isWorkTime = true
+                counterForWork = 25
+                timeLabel.text = "00:\(counterForWork)"
+                timeLabel.textColor = UIColor(hexString: "#c2697c")
+                playOrPauseButton.tintColor = UIColor(hexString: "#c2697c")
+            }
+        }
     }
 
 }
