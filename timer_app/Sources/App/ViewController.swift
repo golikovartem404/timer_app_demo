@@ -110,6 +110,7 @@ class ViewController: UIViewController {
         isAnimationStarted = true
         playOrPauseButton.setImage(UIImage(named: "pause"), for: .normal)
         runTimer()
+        animationForWorkMode()
     }
 
     private func stopTimer() {
@@ -138,6 +139,8 @@ class ViewController: UIViewController {
                 timeLabel.text = "00:\(counterForRest)"
                 timeLabel.textColor = UIColor(hexString: "#429e5c")
                 playOrPauseButton.tintColor = UIColor(hexString: "#429e5c")
+                animatedCircle.strokeColor = UIColor(hexString: "#429e5c").cgColor
+                animationForRestMode()
             }
         } else if !isWorkTime {
             if counterForRest > 0 {
@@ -150,6 +153,8 @@ class ViewController: UIViewController {
                 timeLabel.text = "00:\(counterForWork)"
                 timeLabel.textColor = UIColor(hexString: "#c2697c")
                 playOrPauseButton.tintColor = UIColor(hexString: "#c2697c")
+                animatedCircle.strokeColor = UIColor(hexString: "#c2697c").cgColor
+                animationForWorkMode()
             }
         }
     }
@@ -183,6 +188,27 @@ class ViewController: UIViewController {
         animatedCircle.strokeEnd = 0
         animatedCircle.lineCap = CAShapeLayerLineCap.round
         view.layer.addSublayer(animatedCircle)
+    }
+
+    private func animationForWorkMode() {
+        let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
+        basicAnimation.toValue = 1
+        basicAnimation.duration = CFTimeInterval(counterForWork)
+        basicAnimation.fillMode = CAMediaTimingFillMode.forwards
+        basicAnimation.isRemovedOnCompletion = true
+        basicAnimation.speed = 0.794
+        animatedCircle.add(basicAnimation, forKey: "basicAnimation")
+        imageView.layer.add(basicAnimation, forKey: "basicAnimation")
+    }
+
+    private func animationForRestMode() {
+        let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
+        basicAnimation.toValue = 1
+        basicAnimation.duration = CFTimeInterval(counterForRest)
+        basicAnimation.fillMode = CAMediaTimingFillMode.forwards
+        basicAnimation.isRemovedOnCompletion = true
+        basicAnimation.speed = 0.78
+        animatedCircle.add(basicAnimation, forKey: "basicAnimation")
     }
 
 }
