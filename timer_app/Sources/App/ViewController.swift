@@ -10,6 +10,15 @@ import SnapKit
 
 class ViewController: UIViewController {
 
+    // MARK: - Imitial flags and timer
+
+    var counterForWork = 25
+    var counterForRest = 10
+    var timer: Timer?
+    var isTimerRunning = false
+    var isWorkTime = true
+    var isAnimationStarted = false
+
     // MARK: - Outlets
 
     private lazy var imageView: UIImageView = {
@@ -84,6 +93,18 @@ class ViewController: UIViewController {
     // MARK: - Actions
 
     @objc func playPauseButtonPressed() {
+
+    }
+
+    func runTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 0.97,
+                                     target: self,
+                                     selector: #selector(runningTimer),
+                                     userInfo: nil,
+                                     repeats: true)
+    }
+
+    @objc func runningTimer() {
 
     }
 
