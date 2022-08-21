@@ -56,10 +56,15 @@ class ViewController: UIViewController {
         return stack
     }()
 
+    let backgroundCircle = CAShapeLayer()
+    let animatedCircle = CAShapeLayer()
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        drawBackgroundCircle()
+        drawAnimatedCircle()
         setupHierarchy()
         setupLayouts()
     }
@@ -147,6 +152,37 @@ class ViewController: UIViewController {
                 playOrPauseButton.tintColor = UIColor(hexString: "#c2697c")
             }
         }
+    }
+
+    private func drawBackgroundCircle() {
+        let center = view.center
+        let path = UIBezierPath(arcCenter: center,
+                                radius: 150,
+                                startAngle: -CGFloat.pi / 2,
+                                endAngle: 2 * CGFloat.pi,
+                                clockwise: true)
+        backgroundCircle.path = path.cgPath
+        backgroundCircle.fillColor = UIColor.clear.cgColor
+        backgroundCircle.lineWidth = 8
+        backgroundCircle.strokeColor = UIColor.clear.cgColor
+        backgroundCircle.strokeEnd = 1
+        view.layer.addSublayer(backgroundCircle)
+    }
+
+    private func drawAnimatedCircle() {
+        let center = view.center
+        let path = UIBezierPath(arcCenter: center,
+                                radius: 150,
+                                startAngle: -CGFloat.pi / 2,
+                                endAngle: 2 * CGFloat.pi,
+                                clockwise: true)
+        animatedCircle.path = path.cgPath
+        animatedCircle.fillColor = UIColor.clear.cgColor
+        animatedCircle.lineWidth = 8
+        animatedCircle.strokeColor = UIColor(hexString: "#c2697c").cgColor
+        animatedCircle.strokeEnd = 0
+        animatedCircle.lineCap = CAShapeLayerLineCap.round
+        view.layer.addSublayer(animatedCircle)
     }
 
 }
