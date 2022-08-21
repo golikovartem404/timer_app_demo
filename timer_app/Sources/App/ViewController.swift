@@ -12,8 +12,8 @@ class ViewController: UIViewController {
 
     // MARK: - Imitial flags and timer
 
-    var counterForWork = 25
-    var counterForRest = 10
+    var counterForWorkMode = 25
+    var counterForRestMode = 10
     var timer: Timer?
     var isTimerRunning = false
     var isWorkTime = true
@@ -32,7 +32,7 @@ class ViewController: UIViewController {
     private lazy var timeLabel: UILabel = {
         let time = UILabel()
         time.textColor = UIColor(hexString: "#c2697c")
-        time.text = "00:\(counterForWork)"
+        time.text = "00:\(counterForWorkMode)"
         time.textAlignment = .center
         time.font = UIFont.boldSystemFont(ofSize: 55)
         time.translatesAutoresizingMaskIntoConstraints = false
@@ -59,6 +59,14 @@ class ViewController: UIViewController {
     let backgroundCircle = CAShapeLayer()
     let animatedCircle = CAShapeLayer()
 
+    private lazy var circleImage: UIImageView = {
+        let image = UIImage(systemName: "circle.fill")
+        let imageView = UIImageView(image: image)
+        imageView.tintColor = UIColor.clear
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -73,6 +81,7 @@ class ViewController: UIViewController {
 
     private func setupHierarchy() {
         view.insertSubview(imageView, at: 0)
+        view.addSubview(circleImage)
         view.addSubview(timeAndButtonStackView)
         timeAndButtonStackView.addArrangedSubview(timeLabel)
         timeAndButtonStackView.addArrangedSubview(playOrPauseButton)
@@ -93,6 +102,11 @@ class ViewController: UIViewController {
             make.centerX.equalTo(view)
             make.centerY.equalTo(view)
         }
+
+        circleImage.snp.makeConstraints { make in
+            make.centerX.equalTo(view)
+            make.bottom.equalTo(timeAndButtonStackView.snp.top).multipliedBy(0.8245)
+        }
     }
 
     // MARK: - Actions
@@ -110,6 +124,7 @@ class ViewController: UIViewController {
         isAnimationStarted = true
         playOrPauseButton.setImage(UIImage(named: "pause"), for: .normal)
         runTimer()
+        circleImage.tintColor = UIColor(hexString: "#c2697c")
         animationForWorkMode()
     }
 
@@ -132,29 +147,31 @@ class ViewController: UIViewController {
 
     @objc func runningTimer() {
         if isWorkTime {
-            if counterForWork > 0 {
-                counterForWork -= 1
-                guard counterForWork >= 10 else { return timeLabel.text = "00:0\(counterForWork)" }
-                timeLabel.text = "00:\(counterForWork)"
-            } else if counterForWork == 0 {
+            if counterForWorkMode > 0 {
+                counterForWorkMode -= 1
+                guard counterForWorkMode >= 10 else { return timeLabel.text = "00:0\(counterForWorkMode)" }
+                timeLabel.text = "00:\(counterForWorkMode)"
+            } else if counterForWorkMode == 0 {
                 isWorkTime = false
-                counterForRest = 10
-                timeLabel.text = "00:\(counterForRest)"
+                counterForRestMode = 10
+                timeLabel.text = "00:\(counterForRestMode)"
                 timeLabel.textColor = UIColor(hexString: "#429e5c")
+                circleImage.tintColor = UIColor(hexString: "#429e5c")
                 playOrPauseButton.tintColor = UIColor(hexString: "#429e5c")
                 animatedCircle.strokeColor = UIColor(hexString: "#429e5c").cgColor
                 animationForRestMode()
             }
         } else if !isWorkTime {
-            if counterForRest > 0 {
-                counterForRest -= 1
-                guard counterForRest >= 10 else { return timeLabel.text = "00:0\(counterForRest)" }
-                timeLabel.text = "00:\(counterForRest)"
-            } else if counterForRest == 0 {
+            if counterForRestMode > 0 {
+                counterForRestMode -= 1
+                guard counterForRestMode >= 10 else { return timeLabel.text = "00:0\(counterForRestMode)" }
+                timeLabel.text = "00:\(counterForRestMode)"
+            } else if counterForRestMode == 0 {
                 isWorkTime = true
-                counterForWork = 25
-                timeLabel.text = "00:\(counterForWork)"
+                counterForWorkMode = 25
+                timeLabel.text = "00:\(counterForWorkMode)"
                 timeLabel.textColor = UIColor(hexString: "#c2697c")
+                circleImage.tintColor = UIColor(hexString: "#c2697c")
                 playOrPauseButton.tintColor = UIColor(hexString: "#c2697c")
                 animatedCircle.strokeColor = UIColor(hexString: "#c2697c").cgColor
                 animationForWorkMode()
@@ -196,10 +213,10 @@ class ViewController: UIViewController {
     private func animationForWorkMode() {
         let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
         basicAnimation.toValue = 1
-        basicAnimation.duration = CFTimeInterval(counterForWork)
+        basicAnimation.duration = CFTimeInterval(counterForWorkMode)
         basicAnimation.fillMode = CAMediaTimingFillMode.forwards
         basicAnimation.isRemovedOnCompletion = true
-        basicAnimation.speed = 0.794
+        basicAnimation.speed = 0.79856
         animatedCircle.add(basicAnimation, forKey: "basicAnimation")
         imageView.layer.add(basicAnimation, forKey: "basicAnimation")
     }
@@ -207,10 +224,10 @@ class ViewController: UIViewController {
     private func animationForRestMode() {
         let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
         basicAnimation.toValue = 1
-        basicAnimation.duration = CFTimeInterval(counterForRest)
+        basicAnimation.duration = CFTimeInterval(counterForRestMode)
         basicAnimation.fillMode = CAMediaTimingFillMode.forwards
         basicAnimation.isRemovedOnCompletion = true
-        basicAnimation.speed = 0.78
+        basicAnimation.speed = 0.785
         animatedCircle.add(basicAnimation, forKey: "basicAnimation")
     }
 
