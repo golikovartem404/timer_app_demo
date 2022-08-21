@@ -105,7 +105,7 @@ class ViewController: UIViewController {
 
         circleImage.snp.makeConstraints { make in
             make.centerX.equalTo(view)
-            make.bottom.equalTo(timeAndButtonStackView.snp.top).multipliedBy(0.8245)
+            make.bottom.equalTo(timeAndButtonStackView.snp.top).offset(-67)
         }
     }
 
