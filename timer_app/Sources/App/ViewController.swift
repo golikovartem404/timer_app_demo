@@ -20,6 +20,33 @@ class ViewController: UIViewController {
         return imageView
     }()
 
+    private lazy var timeLabel: UILabel = {
+        let time = UILabel()
+        time.textColor = UIColor(hexString: "#c2697c")
+        time.text = "00:0"
+        time.textAlignment = .center
+        time.font = UIFont.boldSystemFont(ofSize: 55)
+        time.translatesAutoresizingMaskIntoConstraints = false
+        return time
+    }()
+
+    private lazy var playOrPauseButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "play"), for: .normal)
+        button.tintColor = UIColor(hexString: "#c2697c")
+        button.addTarget(self, action: #selector(playPauseButtonPressed), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
+    private lazy var timeAndButtonStackView: UIStackView =  {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 10
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -32,6 +59,9 @@ class ViewController: UIViewController {
 
     private func setupHierarchy() {
         view.insertSubview(imageView, at: 0)
+        view.addSubview(timeAndButtonStackView)
+        timeAndButtonStackView.addArrangedSubview(timeLabel)
+        timeAndButtonStackView.addArrangedSubview(playOrPauseButton)
     }
 
     // MARK: - Setup Layouts
@@ -44,10 +74,18 @@ class ViewController: UIViewController {
             make.right.equalTo(view)
             make.bottom.equalTo(view)
         }
+
+        timeAndButtonStackView.snp.makeConstraints { make in
+            make.centerX.equalTo(view)
+            make.centerY.equalTo(view)
+        }
     }
 
     // MARK: - Actions
 
+    @objc func playPauseButtonPressed() {
+
+    }
 
 }
 
