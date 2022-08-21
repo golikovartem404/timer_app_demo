@@ -117,13 +117,16 @@ class ViewController: UIViewController {
         isTimerRunning = false
         timer?.invalidate()
         playOrPauseButton.setImage(UIImage(named: "play"), for: .normal)
+        pauseAnimation()
     }
 
     @objc func playPauseButtonPressed() {
         if isTimerRunning {
             stopTimer()
-        } else {
+        } else if !isTimerRunning && !isAnimationStarted {
             startTimer()
+        } else if !isTimerRunning && isAnimationStarted {
+            resumeAnimation()
         }
     }
 
@@ -209,6 +212,24 @@ class ViewController: UIViewController {
         basicAnimation.isRemovedOnCompletion = true
         basicAnimation.speed = 0.78
         animatedCircle.add(basicAnimation, forKey: "basicAnimation")
+    }
+
+    private func pauseAnimation(){
+        let pausedTime : CFTimeInterval = animatedCircle.convertTime(CACurrentMediaTime(), from: nil)
+        animatedCircle.speed = 0.0
+        animatedCircle.timeOffset = pausedTime
+    }
+
+    private func resumeAnimation(){
+        let pausedTime = animatedCircle.timeOffset
+        animatedCircle.speed = 1.0
+        animatedCircle.timeOffset = 0.0
+        animatedCircle.beginTime = 0.0
+        let timeSincePause = animatedCircle.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
+        animatedCircle.beginTime = timeSincePause
+        isTimerRunning = true
+        playOrPauseButton.setImage(UIImage(named: "pause"), for: .normal)
+        runTimer()
     }
 
 }
